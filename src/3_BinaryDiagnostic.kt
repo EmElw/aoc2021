@@ -12,44 +12,42 @@ fun calcPowerConsumption(input: List<List<Int>>): Int {
             else -> error("Equal number ones and zeroes")
         }
     }
-    return gamma.joinToString("").toInt(2) *
-            gamma.map { 1 - it }.joinToString("").toInt(2)
+    return gamma.joinToString("").toInt(2) * gamma.map { 1 - it }.joinToString("").toInt(2)
 }
 
 fun calcLifeSupport(input: List<List<Int>>): Int {
     var index = 0
-    var oxygen = input
+    var oxy = input
     var co2 = input
 
-    while (oxygen.size > 1 || co2.size > 1) {
-        if (oxygen.size > 1)
-            oxygen = oxygen.filter { it[index] == oxygen.mostCommon(index) }
-        if (co2.size > 1)
-            co2 = co2.filter { it[index] == co2.leastCommon(index) }
-
+    while (oxy.size > 1 || co2.size > 1) {
+        if (oxy.size > 1) {
+            val bcOxygen = oxy.bitCriteria(index, 1)
+            oxy = oxy.filter { it[index] == bcOxygen }
+        }
+        if (co2.size > 1) {
+            val bcCO2 = co2.bitCriteria(index, 0)
+            co2 = co2.filter { it[index] == bcCO2 }
+        }
         index++
     }
 
-    return oxygen.first().joinToString("").toInt(2) *
-            co2.first().joinToString("").toInt(2)
+    return oxy.first().joinToString("").toInt(2) * co2.first().joinToString("").toInt(2)
 }
 
-private fun List<List<Int>>.mostCommon(index: Int): Int {
+private fun List<List<Int>>.bitCriteria(index: Int, fallback: Int): Int {
     val zeroes = this.count { it[index] == 0 }
     val ones = this.size - zeroes
 
-    return when {
-        zeroes > ones -> 0
-        else -> 1
-    }
-}
+    /**                 fb 0         fb 1
+     *       more 1      0            1
+     *       less 1      1            0
+     *       equal       0            1
+     */
 
-private fun List<List<Int>>.leastCommon(index: Int): Int {
-    val zeroes = this.count { it[index] == 0 }
-    val ones = this.size - zeroes
     return when {
-        ones < zeroes -> 1
-        else -> 0
+        ones < zeroes -> 1 - fallback
+        else -> fallback
     }
 }
 
@@ -64,3 +62,16 @@ fun main() {
     val partTwo = calcLifeSupport(input)
     println("part two: $partTwo") // expected 230 for test input
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
