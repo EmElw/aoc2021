@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.Test
 import java.io.File
 
 typealias Board = List<List<Int>>
@@ -56,11 +57,26 @@ fun playToLose(boards: Boards, order: Order): Int {
     error("no completed board")
 }
 
-fun main() {
-    val input = File("test/4").readLines()
-    val (boards, order) = parseBingo(input)
-    val partOne = play(boards, order)
-    val partTwo = playToLose(boards, order)
-    println("part one: $partOne ") //expected 4512 for test input
-    println("part two: $partTwo") //expected 1924 for test input
+fun solveOne(input: List<String>): Int {
+    val (boards, draw) = parseBingo(input)
+    return play(boards, draw)
+}
+
+fun solveTwo(input: List<String>): Int {
+    val (boards, draw) = parseBingo(input)
+    return playToLose(boards, draw)
+}
+
+internal class GiantSquid {
+    @Test
+    fun test() {
+        File("input/4/sample").readLines().solve(
+            ::solveOne to 4512,
+            ::solveTwo to 1924,
+        )
+        File("input/4/input").readLines().solve(
+            ::solveOne to 39984,
+            ::solveTwo to 8468,
+        )
+    }
 }

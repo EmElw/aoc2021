@@ -45,10 +45,10 @@ data class Vec(val x: Int = 0, val y: Int = 0, val z: Int = 0) {
 
 
 fun main() {
-    val input = File("input/2").readLines()
+    val input = File("input/input").readLines()
 
     val (depth, x) = simpleSubMovement(input)
-    println("part one: ${depth * x}") // expected 150 for test input
+    println("part one: ${depth * x}") // expected 150 for sample input
 
     val f = { acc: Vec, (op: String, o: String): List<String> ->
         val operand = o.toInt()
@@ -63,7 +63,7 @@ fun main() {
     println("alternative one: $altOne")
 
     val (depthComplex, xComplex) = complexSubMovement(input)
-    println("part two: ${depthComplex * xComplex}") // expected 900 for test input
+    println("part two: ${depthComplex * xComplex}") // expected 900 for sample input
 
     val altTwo = input.map { it.split(" ") }.fold(Vec()) { acc, (op, o) ->
         val operand = o.toInt()

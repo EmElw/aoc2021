@@ -39,10 +39,10 @@ private fun List<List<Int>>.bitCriteria(index: Int, fallback: Int): Int {
     val zeroes = this.count { it[index] == 0 }
     val ones = this.size - zeroes
 
-    /**                 fb 0         fb 1
-     *       more 1      0            1
-     *       less 1      1            0
-     *       equal       0            1
+    /**                 fb 0         fb input
+     *       more input      0            input
+     *       less input      input            0
+     *       equal       0            input
      */
 
     return when {
@@ -52,15 +52,15 @@ private fun List<List<Int>>.bitCriteria(index: Int, fallback: Int): Int {
 }
 
 fun main() {
-    val input = File("test/3").readLines().map { str ->
+    val input = File("sample/input").readLines().map { str ->
         str.map { it.digitToInt() } // convert to a matrix
     }
 
     val partOne = calcPowerConsumption(input)
-    println("part one: $partOne") // expected 198 for test input
+    println("part one: $partOne") // expected 198 for sample input
 
     val partTwo = calcLifeSupport(input)
-    println("part two: $partTwo") // expected 230 for test input
+    println("part two: $partTwo") // expected 230 for sample input
 }
 
 
