@@ -57,26 +57,26 @@ fun playToLose(boards: Boards, order: Order): Int {
     error("no completed board")
 }
 
-fun solveOne(input: List<String>): Int {
+private fun countIncreases(input: List<String>): Int {
     val (boards, draw) = parseBingo(input)
     return play(boards, draw)
 }
 
-fun solveTwo(input: List<String>): Int {
+private fun countSlidingIncreases(input: List<String>): Int {
     val (boards, draw) = parseBingo(input)
     return playToLose(boards, draw)
 }
 
 internal class GiantSquid {
     @Test
-    fun test() {
+    fun run() {
         File("input/4/sample").readLines().solve(
-            ::solveOne to 4512,
-            ::solveTwo to 1924,
+            ::countIncreases to 4512,
+            ::countSlidingIncreases to 1924,
         )
         File("input/4/input").readLines().solve(
-            ::solveOne to 39984,
-            ::solveTwo to 8468,
+            ::countIncreases to 39984,
+            ::countSlidingIncreases to 8468,
         )
     }
 }

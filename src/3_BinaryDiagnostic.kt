@@ -39,12 +39,7 @@ private fun List<List<Int>>.bitCriteria(index: Int, fallback: Int): Int {
     val zeroes = this.count { it[index] == 0 }
     val ones = this.size - zeroes
 
-    /**                 fb 0         fb input
-     *       more input      0            input
-     *       less input      input            0
-     *       equal       0            input
-     */
-
+    // it just works
     return when {
         ones < zeroes -> 1 - fallback
         else -> fallback

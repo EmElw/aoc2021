@@ -5,7 +5,7 @@ fun List<String>.solve(vararg pairs: Pair<(List<String>) -> Int, Int?>) {
         if (solution == null) {
             println("new result ${function(this)}")
         } else {
-            assertEquals(function(this), solution)
+            assertEquals(solution, function(this))
         }
     }
 }
