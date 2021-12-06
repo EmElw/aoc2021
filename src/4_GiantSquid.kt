@@ -69,7 +69,7 @@ private fun countSlidingIncreases(input: List<String>): Int {
 
 internal class GiantSquid {
     @Test
-    fun testOne() {
+    fun partOne() {
         File("input/4/sample").readLines().solve(
             ::countIncreases to 4512,
         )
@@ -79,7 +79,7 @@ internal class GiantSquid {
     }
 
     @Test
-    fun testTwo() {
+    fun partTwo() {
         File("input/4/sample").readLines().solve(
             ::countSlidingIncreases to 1924,
         )

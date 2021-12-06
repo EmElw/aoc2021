@@ -35,3 +35,9 @@ fun <T> List<T>.pad(size: Int, padWith: T): List<T> {
     while (new.size < size) new.add(padWith)
     return new
 }
+
+data class Vector(val x: Int = 0, val y: Int = 0, val z: Int = 0) {
+    operator fun plus(o: Vector): Vector {
+        return Vector(this.x + o.x, this.y + o.y, this.z + o.z)
+    }
+}

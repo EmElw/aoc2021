@@ -7,7 +7,7 @@ private fun countSlidingIncreases(input: List<String>): Int =
 
 internal class SonarSweep {
     @Test
-    fun testOne() {
+    fun partOne() {
         File("input/1/sample").readLines().solve(
             ::countIncreases to 7,
         )
@@ -17,7 +17,7 @@ internal class SonarSweep {
     }
 
     @Test
-    fun testTwo() {
+    fun partTwo() {
         File("input/1/sample").readLines().solve(
             ::countSlidingIncreases to 5,
         )

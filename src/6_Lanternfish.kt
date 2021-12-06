@@ -10,13 +10,26 @@ fun fish(initial: List<Int>, day: Int = 1): List<Long> = when (day) {
     }.drop(1)
 }
 
+// alt approach sim each fish since they don't interact with each other, with some memoization on top
+val mem = mutableMapOf<Pair<Int, Int>, Long>()
+fun fish_(days: Int, life: Int): Long = mem[days to life] ?: when {
+    days == 0 -> 1
+    life == 0 -> fish_(days - 1, 6) + fish_(days - 1, 8)
+    else -> fish_(days - 1, life - 1)
+}.also { mem[days to life] = it }
+
 internal class LanternFish {
 
+    private val inputFish = File("input/6/input").readLines().first().split(",").map { it.toInt() }
+
     @Test
-    fun fishCycle() {
-        assertEquals(
-            listOf<Long>(1, 1, 3, 1, 1, 0, 1, 0, 0), fish(listOf(3, 4, 3, 1, 2, 3, 5, 7))
-        )
+    fun fish() {
+        assertEquals(fish(inputFish, 256).sum(), 1710166656900)
+    }
+
+    @Test
+    fun fish_() {
+        assertEquals(inputFish.sumOf { life -> fish_(256, life) }, 1710166656900)
     }
 
     private fun parse(input: List<String>): List<Int> = input.first().split(",").map { it.toInt() }

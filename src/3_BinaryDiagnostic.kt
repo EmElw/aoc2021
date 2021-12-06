@@ -55,7 +55,7 @@ private fun List<List<Int>>.bitCriteria(index: Int, fallback: Int): Int {
 
 internal class BinaryDiagnostics {
     @Test
-    fun testOne() {
+    fun partOne() {
         File("input/3/sample").readLines().solve(
             ::calcPowerConsumption to 198,
         )
@@ -65,7 +65,7 @@ internal class BinaryDiagnostics {
     }
 
     @Test
-    fun testTwo() {
+    fun partTwo() {
         File("input/3/sample").readLines().solve(
             ::calcLifeSupport to 230,
         )

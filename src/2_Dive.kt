@@ -1,22 +1,18 @@
+import org.junit.jupiter.api.Test
 import java.io.File
 
-fun simpleSubMovement(input: List<String>): Pair<Int, Int> {
-    var depth = 0
-    var x = 0
-
-    input.forEach {
-        val (op, _mag) = it.split(" ")
-        val mag = _mag.toInt()
+fun simpleSubMovement(input: List<String>): Int =
+    input.map { it.split(" ").let { (op, mag) -> op to mag.toInt() } }.map { (op, X) ->
         when (op) {
-            "forward" -> x += mag
-            "up" -> depth -= mag
-            "down" -> depth += mag
+            "forward" -> Vector(X)
+            "up" -> Vector(0, -X)
+            "down" -> Vector(0, X)
+            else -> error("unrecognized instruction")
         }
-    }
-    return Pair(depth, x)
-}
+    }.reduce { a, b -> a + b }.let { it.x * it.y }
 
-fun complexSubMovement(input: List<String>): Pair<Int, Int> {
+
+fun complexSubMovement(input: List<String>): Int {
     var depth = 0
     var x = 0
     var aim = 0
@@ -33,47 +29,30 @@ fun complexSubMovement(input: List<String>): Pair<Int, Int> {
             "down" -> aim += operand
         }
     }
-    return Pair(depth, x)
+
+    return depth * x
 }
 
+internal class Dive {
 
-data class Vec(val x: Int = 0, val y: Int = 0, val z: Int = 0) {
-    operator fun plus(o: Vec): Vec {
-        return Vec(this.x + o.x, this.y + o.y, this.z + o.z)
+    @Test
+    fun partOne() {
+        File("input/2/sample").readLines().solve(
+            ::simpleSubMovement to 150
+        )
+        File("input/2/input").readLines().solve(
+            ::simpleSubMovement to 2272262
+        )
     }
-}
 
-
-fun main() {
-    val input = File("input/input").readLines()
-
-    val (depth, x) = simpleSubMovement(input)
-    println("part one: ${depth * x}") // expected 150 for sample input
-
-    val f = { acc: Vec, (op: String, o: String): List<String> ->
-        val operand = o.toInt()
-        when (op) {
-            "forward" -> acc + Vec(x = operand)
-            "up" -> acc + Vec(y = -operand)
-            "down" -> acc + Vec(y = operand)
-            else -> acc
-        }
+    @Test
+    fun partTwo() {
+        File("input/2/sample").readLines().solve(
+            ::complexSubMovement to 900
+        )
+        File("input/2/input").readLines().solve(
+            ::complexSubMovement to 2134882034
+        )
     }
-    val altOne = input.map { it.split(" ") }.fold(Vec(), f).run { this.x * this.y }
-    println("alternative one: $altOne")
-
-    val (depthComplex, xComplex) = complexSubMovement(input)
-    println("part two: ${depthComplex * xComplex}") // expected 900 for sample input
-
-    val altTwo = input.map { it.split(" ") }.fold(Vec()) { acc, (op, o) ->
-        val operand = o.toInt()
-        when (op) {
-            "forward" -> acc + Vec(x = operand, y = acc.z * operand)
-            "up" -> acc + Vec(z = -operand)
-            "down" -> acc + Vec(z = operand)
-            else -> acc
-        }
-    }.run { this.x * this.y }
-    println("alternative two: $altTwo")
 }
 
