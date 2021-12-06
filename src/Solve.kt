@@ -1,6 +1,6 @@
 import kotlin.test.assertEquals
 
-fun List<String>.solve(vararg pairs: Pair<(List<String>) -> Int, Int?>) {
+fun <T> List<String>.solve(vararg pairs: Pair<(List<String>) -> T, T?>) {
     pairs.forEach { (function, solution) ->
         if (solution == null) {
             println("new result ${function(this)}")
@@ -29,3 +29,9 @@ fun <T, V> Iterable<T>.zipPadded(o: Iterable<V>): List<Pair<T, V>> {
 
 infix fun Int.toward(x2: Int) =
     if (this < x2) this..x2 else this downTo x2
+
+fun <T> List<T>.pad(size: Int, padWith: T): List<T> {
+    val new = this.toMutableList()
+    while (new.size < size) new.add(padWith)
+    return new
+}
