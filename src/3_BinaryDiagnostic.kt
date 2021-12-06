@@ -1,9 +1,13 @@
+import org.junit.jupiter.api.Test
 import java.io.File
 
-fun calcPowerConsumption(input: List<List<Int>>): Int {
-    val height = input.size
+fun calcPowerConsumption(input: List<String>): Int {
+    val m = input.map { line ->
+        line.map { it.digitToInt() }
+    }
+    val height = m.size
 
-    val gamma = input.reduce { acc, it ->
+    val gamma = m.reduce { acc, it ->
         acc.zip(it).map { (l, r) -> l + r }
     }.map {
         when {
@@ -15,10 +19,13 @@ fun calcPowerConsumption(input: List<List<Int>>): Int {
     return gamma.joinToString("").toInt(2) * gamma.map { 1 - it }.joinToString("").toInt(2)
 }
 
-fun calcLifeSupport(input: List<List<Int>>): Int {
+fun calcLifeSupport(input: List<String>): Int {
+    val m = input.map { line ->
+        line.map { it.digitToInt() }
+    }
     var index = 0
-    var oxy = input
-    var co2 = input
+    var oxy = m
+    var co2 = m
 
     while (oxy.size > 1 || co2.size > 1) {
         if (oxy.size > 1) {
@@ -46,16 +53,26 @@ private fun List<List<Int>>.bitCriteria(index: Int, fallback: Int): Int {
     }
 }
 
-fun main() {
-    val input = File("sample/input").readLines().map { str ->
-        str.map { it.digitToInt() } // convert to a matrix
+internal class BinaryDiagnostics {
+    @Test
+    fun testOne() {
+        File("input/3/sample").readLines().solve(
+            ::calcPowerConsumption to 198,
+        )
+        File("input/3/input").readLines().solve(
+            ::calcPowerConsumption to 3847100,
+        )
     }
 
-    val partOne = calcPowerConsumption(input)
-    println("part one: $partOne") // expected 198 for sample input
-
-    val partTwo = calcLifeSupport(input)
-    println("part two: $partTwo") // expected 230 for sample input
+    @Test
+    fun testTwo() {
+        File("input/3/sample").readLines().solve(
+            ::calcLifeSupport to 230,
+        )
+        File("input/3/input").readLines().solve(
+            ::calcLifeSupport to 4105235,
+        )
+    }
 }
 
 

@@ -11,27 +11,32 @@ fun countOverlaps(input: List<String>, countDiagonals: Boolean = false): Int {
     val matrix = mutableMapOf<Pair<Int, Int>, Int>()
 
     lines.forEach { (x1, y1, x2, y2) ->
+        (x1 toward x2).zipPadded((y1 toward y2)).forEach { (x, y) ->
+            matrix[x to y] = (matrix[x to y] ?: 0) + 1
+        }
+
+        /*
         var x = x1
         var y = y1
         val dx = (x2 - x1).sign
         val dy = (y2 - y1).sign
-
         while (x != x2 || y != y2) {
             matrix[x to y] = (matrix[x to y] ?: 0) + 1
             x += dx
             y += dy
         }
         matrix[x to y] = (matrix[x to y] ?: 0) + 1
+        */
     }
 
     return matrix.count { it.value >= 2 }
 }
 
-fun solveOne(input: List<String>): Int {
+private fun solveOne(input: List<String>): Int {
     return countOverlaps(input)
 }
 
-fun solveTwo(input: List<String>): Int {
+private fun solveTwo(input: List<String>): Int {
     return countOverlaps(input, true)
 }
 
