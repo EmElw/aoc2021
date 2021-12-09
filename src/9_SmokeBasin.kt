@@ -1,82 +1,53 @@
 import org.junit.jupiter.api.Test
 import java.io.File
+import kotlin.test.assertEquals
 
-typealias Matrix = List<List<Int>>
+private val ADJ = listOf(1 to 0, -1 to 0, 0 to 1, 0 to -1)
 
-val adjacent = listOf(
-    1 to 0,
-    -1 to 0,
-    0 to 1,
-    0 to -1,
-)
+private fun Pair<Int, Int>.adjacent() = let { (x, y) -> ADJ.map { (xx, yy) -> xx + x to yy + y } }
 
-private fun Pair<Int, Int>.isInBounds(matrix: Matrix): Boolean =
-    (this.first in 0..matrix.first().lastIndex && this.second in 0..matrix.lastIndex)
+private fun List<String>.toPointMap() =
+    flatMapIndexed { y, r -> r.mapIndexed { x, t -> (x to y) to t.digitToInt() } }.associate { it }
 
-fun findLowPoints(input: List<String>): Matrix = input.map { line -> line.map { c -> c.digitToInt() } }.let { matrix ->
-    matrix.mapIndexed { y, row ->
-        row.mapIndexed { x, temp ->
-            if (adjacent.all { (xx, yy) ->
-                    val ox = x + xx
-                    val oy = y + yy
-                    if ((ox to oy).isInBounds(matrix)) temp < matrix[oy][ox] else true
-                }) temp else -1
-        }
-    }
+fun lowPoints(mat: Map<Pair<Int, Int>, Int>) = mat.filter { (point, height) ->
+    point.adjacent().all { adj -> height < mat.getOrDefault(adj, 9) }
 }
 
-fun sumLowPoints(input: List<String>): Int = findLowPoints(input).sumOf {
-    it.filter { it != -1 }.sumOf { it + 1 }
-}
+fun basins(mat: Map<Pair<Int, Int>, Int>) = lowPoints(mat).let { lows ->
+    lows.map { (root, _) ->
+        val inBasin = mutableSetOf(root)
+        val frontier = mutableListOf(root)
 
-fun findBasins(input: List<String>): Int {
-    val matrix = input.map { line -> line.map { c -> c.digitToInt() } }
-    val lowPoints = findLowPoints(input)
-    val basinSizes = mutableListOf<Int>()
-
-    lowPoints.forEachIndexed { rootX, row ->
-        row.forEachIndexed { rootY, rootTemp ->
-            if (rootTemp != -1) {
-                val basin = mutableSetOf<Pair<Int, Int>>()
-                val frontier = mutableListOf<Pair<Int, Int>>()
-                frontier.add(rootY to rootX)
-
-                while (frontier.isNotEmpty()) {
-                    val (x, y) = frontier.removeLast()
-                    basin.add(x to y)
-                    val temp = matrix[y][x]
-                    for ((xx, yy) in adjacent) {
-                        val ox = x + xx
-                        val oy = y + yy
-                        if ((ox to oy).isInBounds(matrix) && matrix[oy][ox] > temp && matrix[oy][ox] != 9) frontier.add(
-                            ox to oy
-                        )
-                    }
-                }
-                basinSizes.add(basin.size)
+        while (frontier.isNotEmpty()) {
+            val point = frontier.removeFirst()
+            val temp = mat[point]!!
+            inBasin.add(point)
+            point.adjacent().forEach { (xx, yy) ->
+                val t = mat[xx to yy] ?: 9
+                if (t != 9 && t > temp) frontier.add(xx to yy)
             }
         }
+        inBasin
     }
-
-    basinSizes.sortDescending()
-    return basinSizes.take(3).reduce { l, r -> l * r }
 }
 
+fun basinProduct(input: Map<Pair<Int, Int>, Int>) =
+    basins(input).map { it.size }.sortedDescending().take(3).reduce { l, r -> l * r }
 
 internal class SmokeBasin {
 
-    private val sample = File("input/9/sample").readLines()
-    private val input = File("input/9/input").readLines()
+    private val sample = File("input/9/sample").readLines().toPointMap()
+    private val input = File("input/9/input").readLines().toPointMap()
 
     @Test
     fun partOne() {
-        sample.solve(::sumLowPoints to 15)
-        input.solve(::sumLowPoints to 607)
+        assertEquals(15, lowPoints(sample).values.sumOf { it + 1 })
+        assertEquals(607, lowPoints(input).values.sumOf { it + 1 })
     }
 
     @Test
     fun partTwo() {
-        sample.solve(::findBasins to 1134)
-        input.solve(::findBasins to 900864)
+        assertEquals(1134, basinProduct(sample))
+        assertEquals(900864, basinProduct(input))
     }
 }
