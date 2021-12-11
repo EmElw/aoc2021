@@ -6,73 +6,21 @@ val opening = listOf('(', '[', '{', '<')
 val closing = listOf(')', ']', '}', '>')
 val parens = (opening zip closing).toMap()
 
-fun isCorrupted(line: String): Pair<Boolean, Char?> {
-    val openStack = mutableListOf<Char>()
-    for (current in line) {
-        if (current in opening) {
-            openStack.add(current)
-        } else {
-            val lastOpen = openStack.removeLast()
-            if (parens[lastOpen]!! != current) return true to current
-        }
-    }
-    return false to null
+
+enum class LineType {
+    INCOMPLETE, CORRUPTED,
 }
 
-fun scoreCorrupted(input: List<String>) = input.sumOf { line ->
-    val (corrupt, char) = isCorrupted(line)
-    if (corrupt) when (char) {
-        ')' -> 3
-        ']' -> 57
-        '}' -> 1197
-        '>' -> 25137
-        else -> error("")
-    }
-    else 0 as Int
-}
-
-fun completeLine(line: String): String {
-    val openStack = mutableListOf<Char>()
-    for (current in line) {
-        if (current in opening) {
-            openStack.add(current)
-        } else {
-            openStack.removeLast()
+fun String.processLine(): Pair<LineType, String> {
+    val stack = mutableListOf<Char>()
+    for (c in this) {
+        when (c) {
+            in opening -> stack.add(c)
+            in closing -> if (parens[stack.removeLast()] == c) continue
+            else return LineType.CORRUPTED to c.toString()
         }
     }
-    return openStack.map { parens[it]!! }.reversed().joinToString("")
-}
-
-fun scoreCompletions(input: List<String>) = input.filterNot { isCorrupted(it).first }.map {
-    completeLine(it).fold((0).toLong()) { score, char ->
-        (score * 5) + when (char) {
-            ')' -> 1
-            ']' -> 2
-            '}' -> 3
-            '>' -> 4
-            else -> error("")
-        }
-    }
-}.sorted().let { it[it.size / 2] }
-
-// recreational recursion
-fun isCorruptedRec(line: String, openStack: String = ""): Pair<Boolean, Char?> =
-    if (line.isEmpty()) false to null else line.first().let { cur ->
-        when {
-            cur in opening -> isCorruptedRec(line.drop(1), openStack + cur)
-            cur in closing && parens[openStack.last()] == cur -> isCorruptedRec(line.drop(1), openStack.dropLast(1))
-            else -> true to cur
-        }
-    }
-
-fun completeLineRec(line: String, openStack: String = ""): String = when (line.isEmpty()) {
-    true -> openStack.map { parens[it]!! }.reversed().joinToString("")
-    else -> line.first().let { curr ->
-        when (curr) {
-            in opening -> completeLineRec(line.drop(1), openStack + curr)
-            else -> completeLineRec(line.drop(1), openStack.dropLast(1))
-        }
-    }
+    return LineType.INCOMPLETE to stack.map { parens[it] }.reversed().joinToString("")
 }
 
 internal class SyntaxScoring {
@@ -81,17 +29,43 @@ internal class SyntaxScoring {
     private val sampleCorrupted = File("input/10/sample_corrupted").readLines()
     private val input = File("input/10/input").readLines()
 
+    private val errorScore: (List<String>) -> Int = {
+        it.map { it.processLine() }.filter { it.first == LineType.CORRUPTED }.sumOf { (_, paren) ->
+            when (paren) {
+                ")" -> 3
+                "]" -> 57
+                "}" -> 1197
+                ">" -> 25137
+                else -> error("")
+            }.toInt()
+        }
+    }
+
+    private val completionScore: (List<String>) -> Long = {
+        it.map { it.processLine() }.filter { it.first == LineType.INCOMPLETE }.map { (_, completion) ->
+            completion.fold((0).toLong()) { score, paren ->
+                (score * 5) + when (paren) {
+                    ')' -> 1
+                    ']' -> 2
+                    '}' -> 3
+                    '>' -> 4
+                    else -> error("")
+                }
+            }
+        }.sorted().let { it[it.size / 2] }
+    }
+
     @Test
     fun partOne() {
-        assertEquals(1197, scoreCorrupted(sampleCorrupted))
-        assertEquals(26397, scoreCorrupted(sample))
-        assertEquals(299793, scoreCorrupted(input))
+        assertEquals(1197, errorScore(sampleCorrupted))
+        assertEquals(26397, errorScore(sample))
+        assertEquals(299793, errorScore(input))
     }
 
     @Test
     fun partTwo() {
-        assertEquals("}}]])})]", completeLine("[({(<(())[]>[[{[]{<()<>>"))
-        assertEquals(288957, scoreCompletions(sample))
-        assertEquals(3654963618, scoreCompletions(input))
+        assertEquals("}}]])})]", ("[({(<(())[]>[[{[]{<()<>>").processLine().second)
+        assertEquals(288957, completionScore(sample))
+        assertEquals(3654963618, completionScore(input))
     }
 }
