@@ -20,7 +20,7 @@ fun fish_(days: Int, life: Int): Long = mem[days to life] ?: when {
 
 internal class LanternFish {
 
-    private val inputFish = File("input/6/input").readLines().first().split(",").map { it.toInt() }
+    private val inputFish = File("input/06/input").readLines().first().split(",").map { it.toInt() }
 
     @Test
     fun fish() {
@@ -38,13 +38,13 @@ internal class LanternFish {
 
     @Test
     fun partOne() {
-        File("input/6/sample").readLines().solve(solveOne to 5934)
-        File("input/6/input").readLines().solve(solveOne to 380612)
+        File("input/06/sample").readLines().solve(solveOne to 5934)
+        File("input/06/input").readLines().solve(solveOne to 380612)
     }
 
     @Test
     fun partTwo() {
-        File("input/6/sample").readLines().solve(solveTwo to 26984457539)
-        File("input/6/input").readLines().solve(solveTwo to 1710166656900)
+        File("input/06/sample").readLines().solve(solveTwo to 26984457539)
+        File("input/06/input").readLines().solve(solveTwo to 1710166656900)
     }
 }

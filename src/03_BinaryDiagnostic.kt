@@ -56,20 +56,20 @@ private fun List<List<Int>>.bitCriteria(index: Int, fallback: Int): Int {
 internal class BinaryDiagnostics {
     @Test
     fun partOne() {
-        File("input/3/sample").readLines().solve(
+        File("input/03/sample").readLines().solve(
             ::calcPowerConsumption to 198,
         )
-        File("input/3/input").readLines().solve(
+        File("input/03/input").readLines().solve(
             ::calcPowerConsumption to 3847100,
         )
     }
 
     @Test
     fun partTwo() {
-        File("input/3/sample").readLines().solve(
+        File("input/03/sample").readLines().solve(
             ::calcLifeSupport to 230,
         )
-        File("input/3/input").readLines().solve(
+        File("input/03/input").readLines().solve(
             ::calcLifeSupport to 4105235,
         )
     }

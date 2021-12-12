@@ -37,20 +37,20 @@ internal class Dive {
 
     @Test
     fun partOne() {
-        File("input/2/sample").readLines().solve(
+        File("input/02/sample").readLines().solve(
             ::simpleSubMovement to 150
         )
-        File("input/2/input").readLines().solve(
+        File("input/02/input").readLines().solve(
             ::simpleSubMovement to 2272262
         )
     }
 
     @Test
     fun partTwo() {
-        File("input/2/sample").readLines().solve(
+        File("input/02/sample").readLines().solve(
             ::complexSubMovement to 900
         )
-        File("input/2/input").readLines().solve(
+        File("input/02/input").readLines().solve(
             ::complexSubMovement to 2134882034
         )
     }

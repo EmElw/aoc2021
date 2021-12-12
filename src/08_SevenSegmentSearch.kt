@@ -35,8 +35,8 @@ fun decodeDigit(lengths: Map<Int, Set<Char>>, digit: Set<Char>): Char {
 }
 
 internal class SevenSegmentSearch() {
-    private val sample = File("input/8/sample").readLines()
-    private val input = File("input/8/input").readLines()
+    private val sample = File("input/08/sample").readLines()
+    private val input = File("input/08/input").readLines()
 
     @Test
     fun partOne() {

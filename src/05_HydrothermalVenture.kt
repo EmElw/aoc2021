@@ -1,6 +1,5 @@
 import org.junit.jupiter.api.Test
 import java.io.File
-import kotlin.math.*
 
 
 fun countOverlaps(input: List<String>, countDiagonals: Boolean = false): Int {
@@ -44,20 +43,20 @@ private fun solveTwo(input: List<String>): Int {
 internal class HydrothermalVenture {
     @Test
     fun partOne() {
-        File("input/5/sample").readLines().solve(
+        File("input/05/sample").readLines().solve(
             ::solveOne to 5,
         )
-        File("input/5/input").readLines().solve(
+        File("input/05/input").readLines().solve(
             ::solveOne to 5373,
         )
     }
 
     @Test
     fun partTwo() {
-        File("input/5/sample").readLines().solve(
+        File("input/05/sample").readLines().solve(
             ::solveTwo to 12,
         )
-        File("input/5/input").readLines().solve(
+        File("input/05/input").readLines().solve(
             ::solveTwo to 21514,
         )
     }

@@ -36,8 +36,8 @@ fun basinProduct(input: Map<Pair<Int, Int>, Int>) =
 
 internal class SmokeBasin {
 
-    private val sample = File("input/9/sample").readLines().toPointMap()
-    private val input = File("input/9/input").readLines().toPointMap()
+    private val sample = File("input/09/sample").readLines().toPointMap()
+    private val input = File("input/09/input").readLines().toPointMap()
 
     @Test
     fun partOne() {

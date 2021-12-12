@@ -67,8 +67,8 @@ fun crabOptTwo(input: List<String>): Int {
 
 internal class TheTreacheryOfWhales {
 
-    private val sample = File("input/7/sample").readLines()
-    private val input = File("input/7/input").readLines()
+    private val sample = File("input/07/sample").readLines()
+    private val input = File("input/07/input").readLines()
 
     @Test
     fun partOne() {
