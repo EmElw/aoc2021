@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 typealias Point = Pair<Int, Int>
 typealias Matrix = MutableMap<Point, Int>
 
-val adjacent = (-1..1).flatMap { x -> (-1..1).map { y -> x to y } }.filterNot { (x, y) -> x == 0 && y == 0 }
+private val adjacent = (-1..1).flatMap { x -> (-1..1).map { y -> x to y } }.filterNot { (x, y) -> x == 0 && y == 0 }
 private fun Point.adjacent() = let { (x, y) -> adjacent.map { (xx, yy) -> x + xx to y + yy } }
 
 private fun List<String>.toPointMap() =

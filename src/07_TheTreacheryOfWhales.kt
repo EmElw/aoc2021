@@ -79,7 +79,7 @@ internal class TheTreacheryOfWhales {
     @Test
     fun partTwo() {
         sample.solve(::crabOptTwo to 168)
-        input.solve(::crabOptTwo to null)
+        input.solve(::crabOptTwo to 104149091)
     }
 
     @Test
